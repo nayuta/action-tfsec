@@ -75,29 +75,11 @@ echo "::group:: Print trivy details ..."
   "${TRIVY_PATH}/trivy" --version
 echo '::endgroup::'
 
-echo '::group:: Running trivy without reviewdog 🐶 ...'
-  export REVIEWDOG_GITHUB_API_TOKEN="${INPUT_GITHUB_TOKEN}"
-
-  # Allow failures now, as reviewdog handles them
-  set +Eeuo pipefail
-
-  # shellcheck disable=SC2086
-  trivy_result=$("${TRIVY_PATH}/trivy" --format json ${INPUT_TRIVY_FLAGS:-} --exit-code 1 config . 2> /dev/null \
-    | jq -r -f "${GITHUB_ACTION_PATH}/to-rdjson.jq")
-  echo "trivy_result=${trivy_result}" >> "$GITHUB_OUTPUT"
-  echo "${trivy_result}"
-echo '::endgroup::'
-
 echo '::group:: Running trivy with reviewdog 🐶 ...'
   export REVIEWDOG_GITHUB_API_TOKEN="${INPUT_GITHUB_TOKEN}"
 
   # Allow failures now, as reviewdog handles them
   set +Eeuo pipefail
-
-  # shellcheck disable=SC2086
-  trivy_result=$("${TRIVY_PATH}/trivy" --format json ${INPUT_TRIVY_FLAGS:-} --exit-code 1 config . 2> /dev/null \
-    | jq -r -f "${GITHUB_ACTION_PATH}/to-rdjson.jq")
-  echo "trivy-result=${trivy_result}" >> "$GITHUB_OUTPUT"
 
   # shellcheck disable=SC2086
   "${TRIVY_PATH}/trivy" --format json ${INPUT_TRIVY_FLAGS:-} --exit-code 1 config . 2> /dev/null \
