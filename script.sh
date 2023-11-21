@@ -84,7 +84,7 @@ echo '::group:: Running trivy without reviewdog 🐶 ...'
   # shellcheck disable=SC2086
   trivy_result=$("${TRIVY_PATH}/trivy" --format json ${INPUT_TRIVY_FLAGS:-} --exit-code 1 config . 2> /dev/null \
     | jq -r -f "${GITHUB_ACTION_PATH}/to-rdjson.jq")
-  echo "trivy-result=${trivy_result}" >> "$GITHUB_OUTPUT"
+  echo "trivy_result=${trivy_result}" >> "$GITHUB_OUTPUT"
   echo "${trivy_result}"
 echo '::endgroup::'
 
